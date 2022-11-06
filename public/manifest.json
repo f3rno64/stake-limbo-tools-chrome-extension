@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Stake Limbo Bot",
-  "description": "Configurable stake limbo bot",
+  "name": "Stake Limbo Tools",
+  "description": "Tool sidebar for stake's limbo game",
   "version": "1.0",
   "icons": {
     "16": "icons/icon16.png",

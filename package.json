@@ -1,8 +1,8 @@
 {
-  "name": "stake-limbo-bot-chrome-extension",
+  "name": "stake-limbo-tools-chrome-extension",
   "version": "1.0.0",
   "description": "Configurable stake limbo bot",
-  "repository": "https://github.com/f3rno64/stake-limbo-bot-chrome-extension",
+  "repository": "https://github.com/f3rno64/stake-limbo-tools-chrome-extension",
   "author": "Cris Mihalache <f3rno64@gmail.com>",
   "license": "MIT",
   "private": true,
