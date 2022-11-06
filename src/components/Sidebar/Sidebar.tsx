@@ -45,20 +45,20 @@ const Sidebar = () => {
     stopMultiplierHunt();
   };
 
-  const huntBetSpreads = huntBets
-    .map(({ multiplier }, index) => (
-      multiplier < +huntMultiplier
-        ? -1
-        : huntBets
-          .slice(index + 1)
-          .findIndex(({ multiplier: m }) => m > +huntMultiplier)
-    ))
-    .map(s => s === -1 ? -1 : s + 1)
-    .filter(s => s !== -1);
+  // const huntBetSpreads = huntBets
+  //   .map(({ multiplier }, index) => (
+  //     multiplier < +huntMultiplier
+  //       ? -1
+  //       : huntBets
+  //         .slice(index + 1)
+  //         .findIndex(({ multiplier: m }) => m > +huntMultiplier)
+  //   ))
+  //   .map(s => s === -1 ? -1 : s + 1)
+  //   .filter(s => s !== -1);
 
-  const avgHuntBetSpread = _isEmpty(huntBetSpreads)
-    ? 0
-    : _sum(huntBetSpreads) / huntBetSpreads.length;
+  // const avgHuntBetSpread = _isEmpty(huntBetSpreads)
+  //   ? 0
+  //   : _sum(huntBetSpreads) / huntBetSpreads.length;
 
   return (
     <div className={S.slb_sidebar}>
@@ -98,12 +98,12 @@ const Sidebar = () => {
 
       <Button onClick={changeSeed}>Change Seed</Button>
 
-      <div>
+      {/**<div>
         <div>
           <p>Target multipliers spread</p>
           <p>{Math.ceil(avgHuntBetSpread)}</p>
         </div>
-      </div>
+      </div>*/}
     </div>
   );
 };
