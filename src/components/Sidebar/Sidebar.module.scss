@@ -1,0 +1,17 @@
+.slb_sidebar {
+  position: fixed;
+  top: 100px;
+  left: 100px;
+  background: #213743;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+
+  > * {
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

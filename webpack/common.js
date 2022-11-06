@@ -6,22 +6,12 @@ const DIST_DIR_JS = path.join(__dirname, '..', 'dist/js');
 
 const commonConfig = {
   entry: {
-    popup: path.join(SRC_DIR, 'components/Popup/Popup.tsx'),
-    content: path.join(SRC_DIR, 'content/index.ts'),
+    content: path.join(SRC_DIR, 'content.tsx'),
   },
 
   output: {
     path: DIST_DIR_JS,
     filename: '[name].js',
-  },
-
-  optimization: {
-    splitChunks: {
-      name: 'vendor',
-      chunks(chunk) {
-        return chunk.name !== 'background';
-      }
-    },
   },
 
   module: {
@@ -31,11 +21,20 @@ const commonConfig = {
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.scss$/,
+        use: [
+          { loader: 'style-loader' },
+          { loader: 'css-modules-typescript-loader' },
+          { loader: 'css-loader', options: { modules: true } },
+          { loader: 'sass-loader' },
+        ]
+      }
     ],
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.scss', '.ts', '.tsx', '.js'],
   },
 
   plugins: [
