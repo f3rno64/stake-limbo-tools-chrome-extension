@@ -1,19 +1,24 @@
+import _defer from 'lodash/defer';
 import _reverse from 'lodash/reverse';
 import _isEmpty from 'lodash/isEmpty';
 import _isFinite from 'lodash/isFinite';
 import _debounce from 'lodash/debounce';
 import { STAKE_INPUTS, STAKE_BUTTONS } from '../constants';
 import { HistoricalBet } from '../types';
-import { playBeep } from '../util';
+import { changeSeed, playBeep } from '../util';
 import {
   getInput, getButton, setInputValue, clickButton, watchElementAttribute,
   getPastBets
 } from '../dom';
 
 let isHuntingMultiplier = false;
-let stopHuntCallback = () => {};
-let huntEndCallbacks = [] as Function[];
+let repeatHunt = false;
+let huntEndCallback = (bets: HistoricalBet[], repeat: boolean) => {};
 let huntBets = [] as HistoricalBet[];
+
+// TODO: Refactor
+let betCount = 0;
+let allBets = [] as HistoricalBet[];
 
 // TODO: Refactor this
 let debouncedOnPastBetsUpdated = () => {};
@@ -22,6 +27,10 @@ const betConfig = {
   amount: 0,
   multiplier: 0
 }
+
+const setRepeatHunt = (v) => {
+  repeatHunt = v;
+};
 
 const setBetConfig = (config) => {
   const { amount, multiplier } = config;
@@ -108,25 +117,50 @@ const startMultiplierHunt = ({
   }
 
   const onPastBetsUpdated = () => {
+    betCount += 1;
     huntBets = getPastBets(betConfig.amount);
 
     if (_isEmpty(huntBets)) {
       return;
     }
 
+    const lastBet = huntBets[0];
+
+    allBets.push(lastBet);
+
     const streakBets = huntBets.slice(0, huntStreakLength);
+    const lastNBetsBelowThreshold = streakBets.filter(({ multiplier, won }) => (
+      won && multiplier < 2 // TODO: Break out constant
+    ));
+
     const huntSuccessStreakBets = streakBets.filter(({ multiplier }) => (
       multiplier >= huntMultiplier
     ));
+
+    const nBetsBelowThresholdFulfilled = (
+      lastNBetsBelowThreshold.length === huntStreakLength
+    );
 
     const minOccurencesFulfilled = (
       huntSuccessStreakBets.length >= huntMinOccurences
     );
 
     if (minOccurencesFulfilled) {
+    // if (nBetsBelowThresholdFulfilled && lastBet.won) {
       stopMultiplierHunt();
       playBeep();
     } else {
+      // TODO: Refactor this
+      const lastNLosses = _reverse(allBets)
+        .slice(0, huntStreakLength * 8)
+        .filter(({ won }) => !won);
+
+      // if (betCount % 500 === 0 || lastNLosses.length >= 3) {
+      if (betCount % 500 === 0) {
+        allBets = []; // hack
+        changeSeed();
+      }
+
       betForMultiplierHunt();
     }
   };
@@ -158,19 +192,20 @@ const stopMultiplierHunt = () => {
   );
 
   isHuntingMultiplier = false;
-  stopHuntCallback();
 
-  huntEndCallbacks.forEach((cb) => cb(_reverse(huntBets)));
+  _defer(() => huntEndCallback(_reverse(huntBets), repeatHunt));
 };
 
 const getIsHuntingMultiplier = () => isHuntingMultiplier;
 
-const registerHuntEndCallback = (cb) => {
-  huntEndCallbacks.push(cb);
+// TODO: Refactor this
+const setHuntEndCallback = (cb) => {
+  huntEndCallback = cb;
 };
 
 export {
-  registerHuntEndCallback,
+  setRepeatHunt,
+  setHuntEndCallback,
   getIsHuntingMultiplier,
   startMultiplierHunt,
   stopMultiplierHunt,

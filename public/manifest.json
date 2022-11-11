@@ -13,7 +13,7 @@
   "content_scripts": [{
     "js": ["js/content.js"],
     "matches": [
-      "https://stake.com/casino/games/limbo"
+      "https://stake.com/casino/games/limbo*"
     ]
   }]
 }
