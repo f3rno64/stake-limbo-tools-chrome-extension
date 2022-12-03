@@ -27,22 +27,22 @@ const Sidebar = () => {
   const [isHuntingMultiplier, setIsHuntingMultiplier] = useState<boolean>(false);
 
   const onStartHuntMultiplier = useCallback(() => {
-    // setHuntEndCallback((_, repeat) => {
-    //   setIsHuntingMultiplier(false);
+    setHuntEndCallback((_, repeat) => {
+      setIsHuntingMultiplier(false);
 
-    //   setBetConfig({
-    //     multiplier: 2,
-    //     amount: 0.00000005
-    //   });
+      setBetConfig({
+        multiplier: 2,
+        amount: 0.000001
+      });
 
-    //   bet();
+      bet();
 
-    //   if (repeat) {
-    //     _defer(() => onStartHuntMultiplier());
-    //   }
-    // });
+      if (repeat) {
+        _defer(() => onStartHuntMultiplier());
+      }
+    });
 
-    // setRepeatHunt(true);
+    setRepeatHunt(true);
     setIsHuntingMultiplier(true);
 
     startMultiplierHunt({

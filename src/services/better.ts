@@ -148,7 +148,7 @@ const startMultiplierHunt = ({
     if (minOccurencesFulfilled) {
     // if (nBetsBelowThresholdFulfilled && lastBet.won) {
       stopMultiplierHunt();
-      playBeep();
+      // playBeep();
     } else {
       // TODO: Refactor this
       const lastNLosses = _reverse(allBets)
